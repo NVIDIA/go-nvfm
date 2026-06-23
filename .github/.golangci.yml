@@ -1,0 +1,34 @@
+version: "2"
+linters:
+  disable:
+    - asciicheck
+    - contextcheck
+    - errcheck
+    - forcetypeassert
+    - gocritic
+    - godot
+    - misspell
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/NVIDIA/go-nvfm
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
