@@ -1,0 +1,3 @@
+.cache/
+coverage.out
+pkg/nvfm/_cgo_*.o
