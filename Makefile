@@ -41,7 +41,7 @@ fmt:
 	$(GO) list -f '{{.Dir}}' $(MODULE)/pkg/... $(MODULE)/gen/... | xargs gofmt -s -l -w
 
 golangci-lint:
-	golangci-lint run ./pkg/...
+	golangci-lint run -v
 
 generate:
 	go generate $(MODULE)/...
