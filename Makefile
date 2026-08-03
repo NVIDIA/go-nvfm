@@ -22,23 +22,30 @@ GEN_BINDINGS_DIR := $(GEN_DIR)/nvfm
 PKG_BINDINGS_DIR := $(PKG_DIR)/nvfm
 GO ?= env GOCACHE=$(PWD)/.cache/go GOPATH=$(PWD)/.cache/gopath GOTOOLCHAIN=local go
 
+EXAMPLES := $(patsubst ./examples/%/,%,$(sort $(dir $(wildcard ./examples/*/))))
+EXAMPLE_TARGETS := $(patsubst %,example-%,$(EXAMPLES))
+
 CHECK_TARGETS := validate-modules golangci-lint
 
-MAKE_TARGETS := build fmt generate test
+MAKE_TARGETS := build examples fmt generate test
 
 GENERATE_TARGETS := bindings clean clean-bindings
 
-TARGETS := $(MAKE_TARGETS) $(GENERATE_TARGETS) $(CHECK_TARGETS)
+TARGETS := $(MAKE_TARGETS) $(EXAMPLE_TARGETS) $(GENERATE_TARGETS) $(CHECK_TARGETS)
 
 .PHONY: $(TARGETS)
 
 build:
 	$(GO) build $(MODULE)/pkg/...
 
+examples: $(EXAMPLE_TARGETS)
+$(EXAMPLE_TARGETS): example-%:
+	$(GO) build ./examples/$(*)
+
 check: $(CHECK_TARGETS)
 
 fmt:
-	$(GO) list -f '{{.Dir}}' $(MODULE)/pkg/... $(MODULE)/gen/... | xargs gofmt -s -l -w
+	$(GO) list -f '{{.Dir}}' $(MODULE)/pkg/... $(MODULE)/gen/... $(MODULE)/examples/... | xargs gofmt -s -l -w
 
 golangci-lint:
 	golangci-lint run -v
