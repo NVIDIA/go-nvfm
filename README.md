@@ -7,6 +7,7 @@ Go Bindings for the NVIDIA Fabric Manager SDK (NVFM)
 - [Overview](#overview)
 - [Fabric Manager SDK Package](#fabric-manager-sdk-package)
 - [Quick Start](#quick-start)
+- [Examples](#examples)
 - [How the bindings are generated](#how-the-bindings-are-generated)
 - [Code Structure](#code-structure)
   - [Code defining the NVFM API](#code-defining-the-nvfm-api)
@@ -126,6 +127,21 @@ Supported partitions: 15
 
 Note: Use `nvfm.WithAddress(address)` instead of `nvfm.WithUnixSocket(path)` to
 connect over TCP.
+
+## Examples
+
+The [`examples`](examples) directory contains standalone programs that
+demonstrate how to list, activate, and deactivate Fabric Manager partitions:
+
+- [`list-partitions`](examples/list-partitions)
+- [`activate-partition`](examples/activate-partition)
+- [`deactivate-partition`](examples/deactivate-partition)
+
+Build all examples with:
+
+```bash
+make examples
+```
 
 ## How the bindings are generated
 
