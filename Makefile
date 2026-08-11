@@ -24,14 +24,15 @@ GO ?= env GOCACHE=$(PWD)/.cache/go GOPATH=$(PWD)/.cache/gopath GOTOOLCHAIN=local
 
 EXAMPLES := $(patsubst ./examples/%/,%,$(sort $(dir $(wildcard ./examples/*/))))
 EXAMPLE_TARGETS := $(patsubst %,example-%,$(EXAMPLES))
+CLEAN_EXAMPLE_TARGETS := $(patsubst %,clean-example-%,$(EXAMPLES))
 
 CHECK_TARGETS := validate-modules golangci-lint
 
 MAKE_TARGETS := build examples fmt generate test
 
-GENERATE_TARGETS := bindings clean clean-bindings
+GENERATE_TARGETS := bindings clean clean-bindings clean-examples
 
-TARGETS := $(MAKE_TARGETS) $(EXAMPLE_TARGETS) $(GENERATE_TARGETS) $(CHECK_TARGETS)
+TARGETS := $(MAKE_TARGETS) $(EXAMPLE_TARGETS) $(CLEAN_EXAMPLE_TARGETS) $(GENERATE_TARGETS) $(CHECK_TARGETS)
 
 .PHONY: $(TARGETS)
 
@@ -60,7 +61,12 @@ test: build
 coverage: test
 	go tool cover -func=$(COVERAGE_FILE)
 
-clean: clean-bindings
+clean: clean-bindings clean-examples
+
+clean-examples: $(CLEAN_EXAMPLE_TARGETS)
+$(CLEAN_EXAMPLE_TARGETS): clean-example-%:
+	@echo "Deleting binary for example $(*)"
+	if [ -f "$(PWD)/$(*)" ]; then rm -f "$(PWD)/$(*)"; fi
 
 validate-modules:
 	@echo "- Verifying that the dependencies have expected content..."
